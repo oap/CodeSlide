@@ -1,0 +1,8 @@
+services:
+  code-server:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/home/coder/project
+      - ./config.yaml:/home/coder/.config/code-server/config.yaml
