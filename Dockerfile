@@ -4,17 +4,29 @@ FROM python:3.12.2-slim
 RUN apt-get update && apt-get install -y \
     curl \
     wget \
+    nginx \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+
+# Install Remark.js
+RUN mkdir -p /home/dev/html/js && \
+    curl -fsSL https://remarkjs.com/downloads/remark-latest.min.js -o /home/dev/html/js/remark-latest.min.js
 
 # Install Code-Server
 RUN curl -fsSL https://code-server.dev/install.sh | sh
 
+# Copy custom Nginx configuration
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# Copy files into the container
+COPY html /home/dev/html
+COPY slides /home/dev/slides
+
 # Set the working directory
-WORKDIR /home/coder/project
+WORKDIR /home/dev
 
-# Expose both Code-Server and web server ports
-EXPOSE 8080 8000
+# Expose ports for Nginx (port 80) and Code-Server (port 8080)
+EXPOSE 80 8080
 
-# Start both Code-Server and a web server
-CMD ["sh", "-c", "python3 -m http.server 8000 --directory slides & code-server --bind-addr 0.0.0.0:8080"]
+# Start Nginx and Code-Server
+CMD ["sh", "-c", "nginx && code-server --bind-addr 0.0.0.0:8080"]

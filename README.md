@@ -68,12 +68,12 @@ You can embed Code-Server directly into your slides using an iframe. Example:
 ```markdown
 # Live Coding Example
 
-```python
+~~~python
 # slides/code/example.py
 print("Hello, world!")
-```
+~~~~
 
-<iframe src="http://localhost:8080/?folder=/home/coder/project/slides/code&open=file://example.py" width="100%" height="600px"></iframe>
+<iframe src="http://localhost:8080/?folder=/home/coder/project/slides/code&open=file://example.py" width="100%" height="200px"></iframe>
 ```
 
 ---
