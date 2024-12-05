@@ -2,7 +2,10 @@ services:
   code-server:
     build: .
     ports:
+      - "8000:80"
       - "8080:8080"
     volumes:
-      - .:/home/coder/project
-      - ./config.yaml:/home/coder/.config/code-server/config.yaml
+      - ./html:/home/dev/html
+      - ./slides:/home/dev/slides
+      - ./.config/config.yaml:/home/dev/.config/code-server/config.yaml
+      - ./data/extensions:/home/dev/.local/share/code-server/extensions

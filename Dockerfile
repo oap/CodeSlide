@@ -5,12 +5,15 @@ RUN apt-get update && apt-get install -y \
     curl \
     wget \
     nginx \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    git \
+    supervisor && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Create required directories
+RUN mkdir -p /home/dev/html/js
 
 # Install Remark.js
-RUN mkdir -p /home/dev/html/js && \
-    curl -fsSL https://remarkjs.com/downloads/remark-latest.min.js -o /home/dev/html/js/remark-latest.min.js
+RUN curl -fsSL https://remarkjs.com/downloads/remark-latest.min.js -o /home/dev/html/js/remark-latest.min.js
 
 # Install Code-Server
 RUN curl -fsSL https://code-server.dev/install.sh | sh
@@ -18,12 +21,15 @@ RUN curl -fsSL https://code-server.dev/install.sh | sh
 # Copy custom Nginx configuration
 COPY nginx.conf /etc/nginx/nginx.conf
 
+# Create the nginx user
+RUN adduser --system --no-create-home --disabled-login --group nginx
+
 # Copy files into the container
 COPY html /home/dev/html
-COPY slides /home/dev/slides
 
 # Set the working directory
 WORKDIR /home/dev
+ENV HOME=/home/dev
 
 # Expose ports for Nginx (port 80) and Code-Server (port 8080)
 EXPOSE 80 8080
